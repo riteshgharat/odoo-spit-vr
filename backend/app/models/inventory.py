@@ -7,6 +7,7 @@ from sqlalchemy import (
     DECIMAL,
     Date,
     ForeignKey,
+    TIMESTAMP
 )
 from sqlalchemy.orm import relationship
 
@@ -125,4 +126,17 @@ class StockLedger(Base):
     location = relationship("Location")
     warehouse = relationship("Warehouse")
     document = relationship("InventoryDocument")
+    user = relationship("User")
+
+
+class PasswordResetToken(Base):
+    __tablename__ = "password_reset_tokens"
+
+    id = Column(BigInteger, primary_key=True, autoincrement=True)
+    user_id = Column(BigInteger, ForeignKey("users.id"), nullable=False)
+    otp_code = Column(String(10), nullable=False)
+    expires_at = Column(TIMESTAMP, nullable=False)
+    used = Column(Boolean, default=False, nullable=False)
+    created_at = Column(TIMESTAMP, nullable=False)
+
     user = relationship("User")

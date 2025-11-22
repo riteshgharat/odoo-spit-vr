@@ -6,7 +6,6 @@ from app.db.session import engine
 from app.db.base import Base
 
 
-# Create tables if they don't exist yet (simple dev-only approach)
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title=settings.PROJECT_NAME)

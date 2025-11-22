@@ -66,9 +66,7 @@ def list_products(db: Session = Depends(get_db)):
 
 @router.post("/", response_model=ProductOut, status_code=201)
 def create_product(payload: ProductCreate, db: Session = Depends(get_db)):
-    """
-    Create a new product. SKU must be unique.
-    """
+   
     existing = db.query(Product).filter(Product.sku == payload.sku).first()
     if existing:
         raise HTTPException(status_code=400, detail="SKU already exists")
@@ -91,9 +89,7 @@ def create_product(payload: ProductCreate, db: Session = Depends(get_db)):
 
 @router.get("/{product_id}", response_model=ProductOut)
 def get_product(product_id: int, db: Session = Depends(get_db)):
-    """
-    Get a single product by ID.
-    """
+    
     product = get_product_or_404(db, product_id)
     return product
 
@@ -104,13 +100,10 @@ def update_product(
     payload: ProductUpdate,
     db: Session = Depends(get_db),
 ):
-    """
-    Update a product (full/partial).
-    SKU is not updatable here to avoid complexity.
-    """
+
     product = get_product_or_404(db, product_id)
 
-    # Apply only fields that were provided
+
     update_data = payload.dict(exclude_unset=True)
     for field, value in update_data.items():
         setattr(product, field, value)
@@ -123,10 +116,7 @@ def update_product(
 
 @router.delete("/{product_id}", status_code=204)
 def delete_product(product_id: int, db: Session = Depends(get_db)):
-    """
-    Soft delete a product by setting is_active = False.
-    If you prefer hard delete, you can db.delete(product) instead.
-    """
+
     product = get_product_or_404(db, product_id)
 
     # Soft delete
